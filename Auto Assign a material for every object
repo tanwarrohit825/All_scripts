@@ -1,0 +1,13 @@
+ 
+ // Auto Assign a material for every object use In 3ds Max
+ //
+ 
+ 
+ 
+  for i = 1 to selection.count do
+(
+	 newmat = StandardMaterial()
+	 newmat.name = ("MAT_" + i as string)
+	 selection[i].material = newmat
+
+)

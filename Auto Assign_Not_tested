@@ -1,0 +1,36 @@
+(
+	global rol_transferMaterials
+	try(destroyDialog rol_transferMaterials)catch()
+	rollout rol_transferMaterials "miauu"
+	(
+		global allObjsNamesArr = #()
+		global allObjsMatsArr = #()
+ 
+		button btn_getMats "Get materials" width:140
+		button btn_pasteMaterials "Apply materials" width:140
+ 
+		on btn_getMats pressed do
+		(
+			for o in objects where (oMat = o.material) != undefined do
+			(
+				append allObjsNamesArr o.name
+				append allObjsMatsArr oMat				
+			)
+		)
+ 
+		on btn_pasteMaterials pressed do
+		(
+			if allObjsNamesArr.count != 0 do
+			(
+				for o in objects do
+				(
+					if (idx = findItem allObjsNamesArr o.name) != 0 do
+					(
+						o.material = allObjsMatsArr[idx]
+					)
+				)
+			)
+		)
+	)
+	createdialog rol_transferMaterials 
+)
