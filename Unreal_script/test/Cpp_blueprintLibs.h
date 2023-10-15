@@ -7,6 +7,8 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "Cpp_blueprintLibs.generated.h"
 
+
+
 /**
  * 
  */
@@ -27,4 +29,11 @@ class TTT_API UCpp_blueprintLibs : public UBlueprintFunctionLibrary
 
 	UFUNCTION(BlueprintCallable, Category = "File Access")
 	static bool ReadFile(const FString& FilePath, FString& FileContents);
+
+	UFUNCTION(BlueprintCallable, Category = "File Access")
+	static FString GetFilePath1();
+
+
+	UFUNCTION(BlueprintCallable, Category = "File Selection")
+	static FString OpenFileSelectionDialog();
 };

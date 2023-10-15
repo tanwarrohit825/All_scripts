@@ -3,6 +3,8 @@
 
 #include "Cpp_blueprintLibs.h"
 
+#include <shobjidl.h>
+
 #include "Windows.h"
 
 FString UCpp_blueprintLibs::OpenFileDialog()
@@ -52,5 +54,54 @@ bool UCpp_blueprintLibs::ReadFile(const FString& FilePath, FString& FileContents
 		return true;
 	}
 	return false;
+	
+}
+
+FString UCpp_blueprintLibs::GetFilePath1()
+{
+
+	TCHAR Buffer[MAX_PATH];
+	if (GetModuleFileName(nullptr, Buffer, MAX_PATH) > 0)
+	{
+		return Buffer;
+	}
+	return FString(); // R
+}
+
+FString UCpp_blueprintLibs::OpenFileSelectionDialog()
+{
+
+	FString SelectedFilePath;
+
+	IFileDialog* FileDialog;
+	HRESULT HResult = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&FileDialog));
+	if (SUCCEEDED(HResult))
+	{
+		COMDLG_FILTERSPEC FileTypes[] = { L"All Files", L"*.*" };
+		FileDialog->SetFileTypes(1, FileTypes);
+
+		HResult = FileDialog->Show(nullptr);
+		if (SUCCEEDED(HResult))
+		{
+			IShellItem* SelectedItem;
+			HResult = FileDialog->GetResult(&SelectedItem);
+			if (SUCCEEDED(HResult))
+			{
+				PWSTR FilePath;
+				HResult = SelectedItem->GetDisplayName(SIGDN_FILESYSPATH, &FilePath);
+				if (SUCCEEDED(HResult))
+				{
+					SelectedFilePath = FString(FilePath);
+					CoTaskMemFree(FilePath);
+				}
+				SelectedItem->Release();
+			}
+		}
+
+		FileDialog->Release();
+	}
+
+	return SelectedFilePath;
+
 	
 }
